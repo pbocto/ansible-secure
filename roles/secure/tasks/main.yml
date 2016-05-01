@@ -1,0 +1,33 @@
+---
+- name: add authorized_keys
+  authorized_key: user=root key="{{ item }}"
+  with_file:
+    - key.pub
+
+- name: Update APT package cache
+  apt: update_cache=yes
+
+- name: Upgrade APT to the latest packages
+  apt: upgrade=safe
+
+- name: Install required packages
+  apt: state=installed pkg={{ item }}
+  with_items:
+    - ufw
+    - fail2ban
+    - unattended-upgrades
+
+- name: Setup ufw
+  ufw: state=enabled policy=deny
+
+- name: Allow ssh traffic
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - 22
+    - 2222
+
+- name: Disallow password authentication
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication no"
+              state=present
