@@ -2,4 +2,6 @@
 .idea/
 
 *.pub
+
 server
+local

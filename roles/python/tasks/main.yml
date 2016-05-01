@@ -1,0 +1,9 @@
+---
+- name: Install Python 2.7.10
+  apt: name=python=2.7.10 state=present
+
+- name: Install pip
+  apt: name=python-pip
+
+- name: Install virtualenv
+  pip: name=virtualenv
